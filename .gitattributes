@@ -1,0 +1,4 @@
+*.html  text eol=lf diff=html
+*.md    text eol=lf
+*.yml   text eol=lf
+*.csv   -text -diff

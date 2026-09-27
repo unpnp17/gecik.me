@@ -1,0 +1,30 @@
+name: check
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  syntax:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: index.html script bloğunu ayıkla
+        run: |
+          python3 - <<'PY' > "$RUNNER_TEMP/app.js"
+          import re, sys
+          s = open('index.html', encoding='utf-8').read()
+          m = re.search(r'<script>(.*)</script>', s, re.S)
+          if not m:
+              sys.exit('index.html içinde <script> bloğu bulunamadı')
+          print(m.group(1))
+          PY
+
+      - name: JavaScript sözdizimi kontrolü
+        run: node --check "$RUNNER_TEMP/app.js"
